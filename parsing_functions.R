@@ -166,10 +166,9 @@ skill_chart <- function(data.sheet, sidebar.col) {
     xlab("") + ylab("Proficiency") +
     ggtitle("", subtitle = "By Years Experience") +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 18, face = "bold"),
+          axis.text.x = element_text(size = 16, face = "bold"),
           axis.text.y = element_text(size = 22, face = "bold"),
           panel.background = element_rect(fill = "transparent"),
-          plot.background = element_rect(fill = sidebar.col, color = NA), # bg of the plot to match the sidebar.
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())
 }
