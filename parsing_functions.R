@@ -103,9 +103,9 @@ print_education <- function(data.sheet) {
   read_excel(data.sheet, sheet = "education") %>%
     filter(in_resume == T) %>%
     arrange(desc(end)) %>%
-    mutate(id = 1:n()) %>%
-    mutate(start_date = format(as.Date(start, origin = "1899-12-30"), "%b '%y"),
-           end_date = format(as.Date(end, origin = "1899-12-30"), "%b '%y")
+    mutate(id = 1:n(),
+      start_date = format(as.Date(start, origin = "1899-12-30"), "%b '%y"),
+      end_date = format(as.Date(end, origin = "1899-12-30"), "%b '%y")
     ) %>%
     mutate_at(vars(contains('desc')), as.character) %>%
     pivot_longer(

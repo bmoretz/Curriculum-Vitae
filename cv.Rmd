@@ -25,6 +25,7 @@ library(readxl)
 library(docstring)
 library(kableExtra)
 
+library(cowplot)
 library(MASS)
 library(actuar)
 library(evd)
@@ -62,40 +63,50 @@ source('parsing_functions.R')
 # Grab the background info excel file and store it for later.
 data.sheet <- "background.xlsx"
 
-pretty_kable <- function(data, title, dig = 2) {
-  kable(data, caption = title, digits = dig) %>%
-    kable_styling(bootstrap_options = c("striped", "hover")) %>%
-      kableExtra::kable_styling(latex_options = "hold_position")
-}
-
 ```
 
 Aside
 ================================================================================
 
 ```{r}
-
-Sigma <- matrix(c(1,.5,.5,1),2,2) 
-x <- data.frame(rmvt(n = 10000, sigma = Sigma, df = 2, delta = rep(0, nrow(Sigma)) )) 
+sigma <- matrix( c(1,.5,.5,1), 2, 2)
+x <- data.frame(rmvt(n = 10000, sigma, df = 2, delta = rep(0, nrow(sigma)) )) 
 
 x_cdf <- cbind(pt(x[,1],df=2),pt(x[,2], df=2)) 
 z1 <- x_cdf[,1] 
 z2 <- x_cdf[,2] 
 
-z1 <- qgev(x_cdf[,1],loc=0.0004,scale=0.0009,shape=-0.3)  
-z2 <- qbeta(x_cdf[,2], shape1=4.0, shape2=2.8)                  
-x <- data.frame(z1,z2) 
+z1 <- qgev( x_cdf[,1], loc=0.0004, scale=0.0009, shape=-0.3)  
+z2 <- qbeta( x_cdf[,2], shape1=4.0, shape2=2.8 )
+x <- data.frame(z1,z2)
 
-p <- ggplot(x, aes(z1,z2)) +
-  geom_point() +
+alpha <- .75
+
+pmain <- ggplot(x, aes(z1,z2)) +
+  geom_point(alpha = alpha, col = "darkgrey") +
+  stat_density_2d(aes(fill = stat(level), alpha = ..level..), geom = "polygon") +
   labs(x = "", y = "") +
-  stat_density_2d(aes(fill = stat(level)), geom = "polygon") +
-      theme(legend.position = "none",
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank())
+  theme(legend.position = "none",
+        panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x = element_blank(), axis.text.y = element_blank())
 
-ggExtra::ggMarginal(p, type = "histogram")
+xbox <- axis_canvas(pmain, axis = "x") +
+  geom_histogram(data = x, aes(z1, y = ..density.., fill = ..count..), size = .2, bins = 50, alpha = alpha) +
+  geom_density(data = x, aes(z1), col = "darkgrey", alpha = .55) +
+  theme(legend.position = "none")
 
+ybox <- axis_canvas(pmain, axis = "y", coord_flip = T) +
+  geom_histogram(data = x, aes(z2, y = ..density.., fill = ..count..), size = .2, bins = 50, alpha = alpha) +
+  geom_density(data = x, aes(z2), col = "darkgrey", alpha = .55) +
+  coord_flip() +
+  theme(legend.position = "none")
+
+suppressWarnings({
+  p1 <- insert_xaxis_grob(pmain, xbox, grid::unit(.2, "null"), position = "top")
+  p2 <- insert_yaxis_grob(p1, ybox, grid::unit(.2, "null"), position = "right")
+})
+
+ggdraw(p2)
 ```
 
 Contact {#contact}
@@ -177,15 +188,7 @@ Lead development effort on our in-house proprietary data analytics  and risk sys
 
 Technology: R, C#, WPF
 
-### Technical Lead
-
-MSD Capital, L.P.
-
-New York, NY
-
-Dec '19 - Feb '13
-
-*Option Pricing Framework*
+**Option Pricing Framework**
 
 - Lead development effort on our in-house proprietary data analytics  and risk system on a team of five.
 - Presentation layer constructed with WPF/C#, Service-Oriented-Architecture built with WCF/C#, data layer modeled in T-SQL and processed with R packages deployed to the server instance, invoked directly with stored procedures.
