@@ -24,6 +24,7 @@ library(glue)
 library(readxl)
 library(docstring)
 library(kableExtra)
+library(anytime)
 
 library(cowplot)
 library(MASS)
@@ -63,6 +64,7 @@ source('parsing_functions.R')
 # Grab the background info excel file and store it for later.
 data.sheet <- "background.xlsx"
 
+select <- dplyr::select
 ```
 
 Aside
@@ -141,9 +143,6 @@ Disclaimer {#disclaimer}
 
 This resume was made with the R package [**pagedown**](https://github.com/rstudio/pagedown).
 
-Last updated on `r Sys.Date()`.
-
-
 
 Main
 ================================================================================
@@ -168,6 +167,10 @@ print_education(data.sheet)
 
 Professional Experience {data-icon=suitcase}
 --------------------------------------------------------------------------------
+
+```{r}
+print_professional(data.sheet)
+```
 
 ### Head of Development
 

@@ -149,6 +149,66 @@ print_education <- function(data.sheet) {
     )
 }
 
+print_professional <- function(data.sheet) {
+  
+  positions <- read_excel(data.sheet, sheet = "positions") %>%
+    filter(in_resume == T) %>%
+    select(-in_resume)
+  
+  projects <- read_excel(data.sheet, sheet = "projects") %>%
+    filter(in_resume == T) %>%
+    select(-in_resume)
+  
+  history <- inner_join(positions, projects, by = "institution") %>%
+    mutate(id = 1:n(),
+           start_date = format(as.Date(start, origin = "1899-12-30"), "%b '%y"),
+           end_date = ifelse(is.na(end), "Present", format(as.Date(end, origin = "1899-12-30"), "%b '%y"))) %>%
+    arrange(!is.na(end), desc(end)) %>%
+    select(-c(start, end)) %>%
+    mutate_at(vars(contains('detail')), as.character) %>%
+    pivot_longer(
+      starts_with('detail'),
+      names_to = 'detail_num',
+      values_to = 'detail',
+    ) %>%
+    filter(!is.na(detail)) %>%
+    group_by(name) %>%
+    mutate(
+      details = list(detail),
+      no_detail = is.na(first(detail))
+    ) %>%
+    ungroup() %>% 
+    filter(detail_num == 'detail_1') %>% 
+    mutate(
+      timeline =glue('{end_date} - {start_date}'),
+      detail_bullets = ifelse(
+        no_detail,
+        ' ',
+        map_chr(details, ~paste('-', ., collapse = '\n'))
+      )
+    ) %>%
+    strip_links_from_cols(c('title', 'detail_bullets')) %>% 
+    mutate_all(~ifelse(is.na(.), 'N/A', .))
+
+  details <- history %>%
+    group_by(institution) %>%
+    group_map( ~ {
+      
+      title <- unique(.x$title)
+      loc <- unique(.x$loc)
+      timeline <- unique(.x$timeline)
+      
+      summary <- paste0("### ", title, "\n\n", 
+                        .y, "\n\n", 
+                        loc, "\n\n", 
+                        timeline, "\n\n")
+      
+      summary
+    })
+  
+  cat(unlist(details), sep = "")
+}
+  
 skill_chart <- function(data.sheet, sidebar.col) {
   #' This function parses the language skill data from
   #' the information data sheet.

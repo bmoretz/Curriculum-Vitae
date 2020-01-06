@@ -3,6 +3,7 @@ library(ggthemes)
 library(glue)
 library(readxl)
 library(docstring)
+library(anytime)
 
 select <- dplyr::select
 
@@ -32,10 +33,14 @@ projects <- read_excel(data.sheet, sheet = "projects") %>%
   filter(in_resume == T) %>%
   select(-in_resume)
 
-experience <- merge(positions, projects, by = c("institution")) %>%
+# experience <- 
+
+
+history <- inner_join(positions, projects, by = "institution") %>%
   mutate(id = 1:n(),
          start_date = format(as.Date(start, origin = "1899-12-30"), "%b '%y"),
          end_date = ifelse(is.na(end), "Present", format(as.Date(end, origin = "1899-12-30"), "%b '%y"))) %>%
+  arrange(!is.na(end), desc(end)) %>%
   select(-c(start, end)) %>%
   mutate_at(vars(contains('detail')), as.character) %>%
   pivot_longer(
@@ -44,6 +49,7 @@ experience <- merge(positions, projects, by = c("institution")) %>%
     values_to = 'detail',
   ) %>%
   filter(!is.na(detail)) %>%
+  group_by(name) %>%
   mutate(
     details = list(detail),
     no_detail = is.na(first(detail))
@@ -61,7 +67,27 @@ experience <- merge(positions, projects, by = c("institution")) %>%
       ' ',
       map_chr(details, ~paste('-', ., collapse = '\n'))
     )
-  )
+  ) %>%
+  strip_links_from_cols(c('title', 'detail_bullets')) %>% 
+  mutate_all(~ifelse(is.na(.), 'N/A', .))
+
+details <- history %>%
+  group_by(institution) %>%
+    group_map( ~ {
+      
+      title <- unique(.x$title)
+      loc <- unique(.x$loc)
+      timeline <- unique(.x$timeline)
+      
+      summary <- paste0("### ", title, "\n\n", 
+                        .y, "\n\n", 
+                        loc, "\n\n", 
+                        timeline, "\n\n")
+      
+      summary
+    })
+
+cat(unlist(details), sep = "")
 
 ## Logo Plot
 sigma <- matrix( c(1,.5,.5,1), 2, 2)
