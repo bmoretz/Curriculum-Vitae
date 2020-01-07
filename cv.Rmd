@@ -158,18 +158,18 @@ if I'd like to test the **pagedown** package with my resume. If you are
 interested in my background and skills, please feel free to contact me.
 
 
-Education {data-icon=graduation-cap data-concise=true}
---------------------------------------------------------------------------------
-
-```{r}
-print_education(data.sheet)
-```
-
 Professional Experience {data-icon=suitcase}
 --------------------------------------------------------------------------------
 
 ```{r}
 print_professional(data.sheet)
+```
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+print_education(data.sheet)
 ```
 
 ### Head of Development

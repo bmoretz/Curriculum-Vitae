@@ -78,13 +78,31 @@ details <- history %>%
       title <- unique(.x$title)
       loc <- unique(.x$loc)
       timeline <- unique(.x$timeline)
+    
+      projects <- as_tibble(.x) %>%
+        group_by('name') %>%
+        group_map( ~ {
+          
+          project <- as_tibble(.x) %>%
+            glue_data("**{name}**
+                      {overview}
+                      {detail_bullets}
+                      Technology: {technology}")
+          
+          project
+          
+        }) %>%
+        unlist()
       
-      summary <- paste0("### ", title, "\n\n", 
-                        .y, "\n\n", 
-                        loc, "\n\n", 
-                        timeline, "\n\n")
+      position <- paste( paste0("### ", title), 
+                         .y, 
+                         loc, 
+                         timeline,
+                         sep = "\n\n")
       
-      summary
+      position <- cat(position, unlist(projects), sep = "\n\n")
+      
+      position
     })
 
 cat(unlist(details), sep = "")
