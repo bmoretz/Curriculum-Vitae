@@ -24,7 +24,6 @@ theme_update(axis.text.x = element_text(size = 10),
              plot.margin = unit(c( 0.1, 0.1, 0.1, 0.1), "inches"))
 
 data.sheet <- "background.xlsx"
-
 positions <- read_excel(data.sheet, sheet = "positions") %>%
   filter(in_resume == T) %>%
   select(-in_resume)
@@ -32,8 +31,6 @@ positions <- read_excel(data.sheet, sheet = "positions") %>%
 projects <- read_excel(data.sheet, sheet = "projects") %>%
   filter(in_resume == T) %>%
   select(-in_resume)
-
-# experience <- 
 
 history <- inner_join(positions, projects, by = "institution") %>%
   mutate(id = 1:n(),
@@ -56,56 +53,51 @@ history <- inner_join(positions, projects, by = "institution") %>%
   ungroup() %>% 
   filter(detail_num == 'detail_1') %>% 
   mutate(
-    timeline = ifelse(
-      is.na(start_date) | start_date == end_date,
-      end_date,
-      glue('{end_date} - {start_date}')
-    ),
+    timeline =glue('{end_date} - {start_date}'),
     detail_bullets = ifelse(
       no_detail,
       ' ',
       map_chr(details, ~paste('-', ., collapse = '\n'))
     )
   ) %>%
-  strip_links_from_cols(c('title', 'detail_bullets')) %>% 
   mutate_all(~ifelse(is.na(.), 'N/A', .))
 
-details <- history %>%
+
+history %>%
   group_by(institution) %>%
-    group_map( ~ {
-      
-      title <- unique(.x$title)
-      loc <- unique(.x$loc)
-      timeline <- unique(.x$timeline)
-      summary <- unique(.x$summary)
-      
-      projects <- as_tibble(.x) %>%
-        group_by('name') %>%
-        group_map( ~ {
-          
-          project <- as_tibble(.x) %>%
-            glue_data("**{name}**\n
+  group_map( ~ {
+    
+    title <- unique(.x$title)
+    loc <- unique(.x$loc)
+    timeline <- unique(.x$timeline)
+    summary <- unique(.x$summary)
+    
+    projects <- as_tibble(.x) %>%
+      mutate(overview = ifelse(is.na(overview), "", paste0(overview, "\n"))) %>%
+      group_by('name') %>%
+      group_map( ~ {
+        
+        project <- as_tibble(.x) %>%
+          glue_data("**{name}**\n
                       {overview}
                       {detail_bullets}\n
                       ***\n
                       Technology: {technology}")
-          
-          project
-          
-        }) %>%
-        unlist()
-      
-      position <- paste( paste0("\n### ", title), 
-                         .y, 
-                         loc,
-                         timeline,
-                         ifelse(summary == 'N/A', "", paste0(summary)),
-                         sep = "\n\n")
-      
-      position <- cat(position, unlist(projects), sep = "\n\n")
-      
-    }) %>%
-    unlist()
+      }) %>%
+      unlist()
+    
+    position <- paste( paste0("\n### ", title), 
+                       .y, 
+                       loc, 
+                       timeline,
+                       ifelse(summary == 'N/A', "", paste0(summary)),
+                       sep = "\n\n")
+    
+    cat(position, projects, sep = "\n\n")
+  
+  }) %>%
+  unlist() %>%
+  cat()
 
 ## Logo Plot
 sigma <- matrix( c(1,.5,.5,1), 2, 2)

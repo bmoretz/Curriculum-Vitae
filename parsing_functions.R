@@ -136,9 +136,11 @@ print_professional <- function(data.sheet) {
       position <- cat(position, unlist(projects), sep = "\n\n")
       
       position
-    })
+    }) %>%
+    unlist() %>%
+    cat()
 }
-  
+
 skill_chart <- function(data.sheet, sidebar.col) {
   #' This function parses the language skill data from
   #' the information data sheet.
@@ -147,7 +149,6 @@ skill_chart <- function(data.sheet, sidebar.col) {
   #' and returns a ggplot plot.
   #'
   #' @param data.sheet the information data sheet (excel file)
-  #' 
   read_excel(data.sheet, sheet = "skills") %>%
     arrange(desc(level)) %>%
     ggplot(aes(reorder(skill, level), level)) +
@@ -161,4 +162,19 @@ skill_chart <- function(data.sheet, sidebar.col) {
           panel.background = element_rect(fill = "transparent"),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())
+}
+
+print_certs <- function(data.sheet) {
+  read_excel(data.sheet, sheet = "certifications") %>%
+    filter(in_resume == T) %>%
+    mutate(date = format(as.Date(when, origin = "1899-12-30"), "%b '%y")) %>%
+    glue_data(
+      "### {name}",
+      "\n\n",
+      "[{type}]({link})",
+      "\n\n",
+      "{institution}",
+      "\n\n",
+      "{date}\n\n"
+    )
 }
