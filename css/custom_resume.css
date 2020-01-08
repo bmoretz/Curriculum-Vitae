@@ -57,6 +57,7 @@
 }
 
 [data-id="disclaimer"] p {
+  font-size: 7px;
   margin-block-start: 0.15em;
   margin-block-end: 0.15em;
 }

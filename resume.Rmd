@@ -8,7 +8,7 @@ output:
     # set it to true for a self-contained HTML page but it'll take longer to render
     self_contained: false
 # uncomment this line to produce HTML and PDF in RStudio:
-#knit: pagedown::chrome_print
+knit: pagedown::chrome_print
 ---
 
 
@@ -118,7 +118,6 @@ Contact {#contact}
 
 - For more information, please contact me via email.
 
-
 Language Skills {#skills}
 --------------------------------------------------------------------------------
 
@@ -126,17 +125,17 @@ Language Skills {#skills}
 skill_chart(data.sheet)
 ```
 
+- Expert knowledge of the Windows Platform SDK, .NET Framework, Windows Presentation/Communication Foundations.
+
 - Experienced in statistical analysis, statistical learning models, and optimization methods.
 
-- Full experience with next generation sequencing data analysis.
-
-- Highly skilled in R, Bash, Perl, Python, LaTeX
+- Passion for building scalable, reliable and performant quantitative systems.
 
 
 Disclaimer {#disclaimer}
 --------------------------------------------------------------------------------
 
-This resume was made with the R package [**pagedown**](https://github.com/rstudio/pagedown).
+Resume created with the R package [*pagedown*](https://github.com/rstudio/pagedown).
 
 
 Main
@@ -144,17 +143,14 @@ Main
 
 Brandon Moretz {#title}
 --------------------------------------------------------------------------------
-
 ### Quantitative Development
 
-Please note that this is a *real* resume, and I'm really looking for a PhD
-student position at the moment. I made this resume because Yihui asked me
-if I'd like to test the **pagedown** package with my resume. If you are
-interested in my background and skills, please feel free to contact me.
+An experienced software engineering professional with a successful track record working in the investment management industry. Successfully managed teams in a hands-on capacity at all of my previous roles after entering as an individual contributor.
 
+Enjoys solving problems, learning and teaching others. 
+ 
 Education {data-icon=graduation-cap data-concise=true}
 --------------------------------------------------------------------------------
-
 ```{r}
 print_education(data.sheet)
 ```

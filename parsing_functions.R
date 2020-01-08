@@ -161,7 +161,8 @@ skill_chart <- function(data.sheet, sidebar.col) {
           axis.text.y = element_text(size = 22, face = "bold"),
           panel.background = element_rect(fill = "transparent"),
           panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank())
+          panel.grid.minor = element_blank(),
+          plot.subtitle = element_text(face = "bold", size = 22))
 }
 
 print_certs <- function(data.sheet) {
