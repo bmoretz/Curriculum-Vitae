@@ -35,7 +35,6 @@ projects <- read_excel(data.sheet, sheet = "projects") %>%
 
 # experience <- 
 
-
 history <- inner_join(positions, projects, by = "institution") %>%
   mutate(id = 1:n(),
          start_date = format(as.Date(start, origin = "1899-12-30"), "%b '%y"),
@@ -78,15 +77,17 @@ details <- history %>%
       title <- unique(.x$title)
       loc <- unique(.x$loc)
       timeline <- unique(.x$timeline)
-    
+      summary <- unique(.x$summary)
+      
       projects <- as_tibble(.x) %>%
         group_by('name') %>%
         group_map( ~ {
           
           project <- as_tibble(.x) %>%
-            glue_data("**{name}**
+            glue_data("**{name}**\n
                       {overview}
-                      {detail_bullets}
+                      {detail_bullets}\n
+                      ***\n
                       Technology: {technology}")
           
           project
@@ -94,18 +95,17 @@ details <- history %>%
         }) %>%
         unlist()
       
-      position <- paste( paste0("### ", title), 
+      position <- paste( paste0("\n### ", title), 
                          .y, 
-                         loc, 
+                         loc,
                          timeline,
+                         ifelse(summary == 'N/A', "", paste0(summary)),
                          sep = "\n\n")
       
       position <- cat(position, unlist(projects), sep = "\n\n")
       
-      position
-    })
-
-cat(unlist(details), sep = "")
+    }) %>%
+    unlist()
 
 ## Logo Plot
 sigma <- matrix( c(1,.5,.5,1), 2, 2)
