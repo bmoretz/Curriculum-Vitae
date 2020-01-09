@@ -145,7 +145,7 @@ Brandon Moretz {#title}
 
 An experienced software engineering professional with a successful track record working in the investment management industry. Successfully managed teams in a hands-on capacity at all of my previous roles after entering as an individual contributor.
 
-Enjoys solving problems, learning and teaching others. 
+Enjoys solving problems, learning and teaching others.
  
 Education {data-icon=graduation-cap data-concise=true}
 --------------------------------------------------------------------------------
