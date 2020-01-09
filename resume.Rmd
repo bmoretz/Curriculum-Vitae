@@ -8,7 +8,7 @@ output:
     # set it to true for a self-contained HTML page but it'll take longer to render
     self_contained: false
 # uncomment this line to produce HTML and PDF in RStudio:
-# knit: pagedown::chrome_print
+knit: pagedown::chrome_print
 ---
 
 
@@ -115,8 +115,6 @@ Contact {#contact}
 - <i class="fab fa-stack-overflow"></i> [Stack Overflow](https://stackoverflow.com/users/538272/brandon-moretz)
 - <i class="fas fa-rss"></i> [Blog](https://ionicsolutions.net/)
 - <i class="fa fa-phone"></i> +1 (201) 878-4968
-
-- For more information, please contact me via email.
 
 Language Skills {#skills}
 --------------------------------------------------------------------------------
