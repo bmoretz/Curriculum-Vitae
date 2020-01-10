@@ -123,7 +123,7 @@ Language Skills {#skills}
 skill_chart(data.sheet)
 ```
 
-- Expert knowledge of the Windows Platform SDK, .NET Framework, Windows Presentation/Communication Foundations.
+- Expert knowledge of the Windows Platform SDK, .NET Framework, Windows Presentation / Communication Foundation.
 
 - Experienced in statistical analysis, statistical learning models, and optimization methods.
 
