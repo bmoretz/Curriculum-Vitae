@@ -154,7 +154,7 @@ skill_chart <- function(data.sheet, sidebar.col) {
     ggplot(aes(reorder(skill, level), level)) +
     geom_bar(aes(fill = level), stat = "identity", alpha = .8) +
     coord_flip() +
-    xlab("") + ylab("Proficiency") +
+    xlab("") + ylab("") +
     ggtitle("", subtitle = "By Years Experience") +
     theme(legend.position = "none",
           axis.text.x = element_text(size = 16, face = "bold"),
