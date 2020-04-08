@@ -7,19 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="author" content="Brandon Moretz" />
-    <meta name="date" content="2020-01-14" />
+    <meta name="date" content="2020-04-07" />
     <title>Brandon Moretz’s resume</title>
 
     
         <link href="resume_files/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
     <link href="resume_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
-    <link href="resume_files/paged-0.7.1/css/resume.css" rel="stylesheet" />
-    <script src="resume_files/paged-0.7.1/js/config.js"></script>
-    <script src="resume_files/paged-0.7.1/js/paged.js"></script>
-    <script src="resume_files/paged-0.7.1/js/hooks.js"></script>
+    <link href="resume_files/paged-0.9/css/resume.css" rel="stylesheet" />
+    <script src="resume_files/paged-0.9/js/config.js"></script>
+    <script src="resume_files/paged-0.9/js/paged.js"></script>
+    <script src="resume_files/paged-0.9/js/hooks.js"></script>
     
-        <link rel="stylesheet" href="css/custom_resume.css" type="text/css" />
-        <link rel="stylesheet" href="css/styles.css" type="text/css" />
+        <link rel="stylesheet" href="css\custom_resume.css" type="text/css" />
+        <link rel="stylesheet" href="css\styles.css" type="text/css" />
     
   </head>
   <body>
@@ -209,8 +209,11 @@
     if (i === 0 && el.id === 'title') continue;
     el.className += ' main-block';
     if (el.dataset['concise']) el.className += ' concise';
-    s = el.dataset['icon'] || 'bookmark';
-    el.firstElementChild.insertBefore(create_el('i', 'fa fa-' + s), el.firstElementChild.firstChild);
+    // if there is no icon, add an icon:
+    if (el.firstElementChild.firstChild && el.firstElementChild.firstChild.nodeName !== 'I') {
+      s = el.dataset['icon'] || 'bookmark';
+      el.firstElementChild.insertBefore(create_el('i', 'fa fa-' + s), el.firstElementChild.firstChild);
+    }
   }
 
   // tweak class names of blocks in sections
